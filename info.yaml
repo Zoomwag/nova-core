@@ -1,7 +1,7 @@
 # Tiny Tapeout project information
 project:
-  title:        "16-bit Accumulator CPU"        # TODO: change if you like
-  author:       "Your Name"                      # TODO: put your name here
+  title:        "Nova Core"        
+  author:       "Jonathan B"                      # TODO: put your name here
   discord:      ""                                # TODO: optional, your Discord username
   description:  "A small 16-bit accumulator-based CPU (ALU, RAM, program ROM) with an 8-bit multiplexed byte interface for loading input and reading output."
   language:     "Verilog"
@@ -11,7 +11,7 @@ project:
   tiles: "1x1"
 
   # Your top module name must start with "tt_um_". Make it unique by including your GitHub username:
-  top_module:  "tt_um_yourusername_cpu16"   # TODO: replace "yourusername"
+  top_module:  "tt_um_zoomwag_cpu16"   # TODO: replace "yourusername"
 
   # List your project's source files here. Source files must be in ./src
   # and you must list each source file separately, one per line:
