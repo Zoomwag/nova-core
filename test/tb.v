@@ -29,7 +29,7 @@ module tb ();
 
   // Points at the CPU wrapper module in src/project.v -- keep this in sync
   // with `top_module` in info.yaml if you rename it.
-  tt_um_yourusername_cpu16 user_project (
+  tt_um_zoomwag_cpu16 user_project (
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST
