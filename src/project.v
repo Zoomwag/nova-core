@@ -1,31 +1,5 @@
 `default_nettype none
 
-// ============================================================
-// Tiny Tapeout wrapper for the 16-bit accumulator CPU (see cpu.v)
-//
-// Tiny Tapeout only gives you 8 dedicated inputs (ui_in), 8 dedicated
-// outputs (uo_out) and 8 bidirectional pins (uio_*) -- 24 pins total,
-// and at most 16 usable in one direction at a time. The CPU core wants
-// a 16-bit input, a 16-bit output, and a 6-bit debug output (39 bits),
-// so this wrapper multiplexes everything down onto an 8-bit bus:
-//
-//   ui_in[7:0]   -> data byte to load into the CPU's input register
-//   uio_in[3]    -> load_strobe: while high, ui_in is latched every
-//                   clock edge into the half of main_input_reg picked
-//                   by load_half
-//   uio_in[2]    -> load_half: 0 = low byte of main_input, 1 = high byte
-//   uio_in[1:0]  -> out_sel: which byte appears on uo_out this cycle
-//                     00 = main_output[7:0]
-//                     01 = main_output[15:8]
-//                     10 = {2'b00, pc_value}  (debug)
-//                     11 = 8'h00
-//   uo_out[7:0]  -> the byte selected by out_sel
-//   uio_out/oe   -> all uio pins are used as inputs, so oe is 0
-//
-// To load a 16-bit value: drive ui_in with the low byte, uio_in[2]=0,
-// pulse uio_in[3] high for at least one clock, then repeat with the
-// high byte and uio_in[2]=1.
-// ============================================================
 
 module tt_um_zoomwag_cpu16 (
     input  wire [7:0] ui_in,    // Dedicated inputs
