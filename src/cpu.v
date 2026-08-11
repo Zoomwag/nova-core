@@ -11,24 +11,16 @@ module top(
     output wire [5:0] pc_value
 );
 
-    // ---- fetch-stage wires ----
+
     wire        pc_enable;
     wire        jump;
     wire [5:0]  jump_address;
     wire [15:0] instruction_from_rom;
     wire [15:0] instruction;
 
-    // The IR loads a fresh word from ROM whenever the PC is allowed to
-    // advance. Tying this to pc_enable (rather than a constant 1) makes
-    // sure that when HALT drops pc_enable, the IR freezes on the HALT
-    // instruction itself instead of picking up whatever instruction
-    // happens to sit at the next ROM address.
+
     wire ir_load = pc_enable;
 
-    // Zero flag latched at the same edge the accumulator captures an ALU
-    // result, so a following JZ/JNZ can test the flag from the
-    // instruction that produced it (the live ALU output is only valid
-    // during the cycle the ALU op itself is being decoded).
     reg flag_zero;
     always @(posedge clk) begin
         if (reset)
@@ -37,14 +29,12 @@ module top(
             flag_zero <= alu_zero;
     end
 
-    // ---- decode-stage wires ----
     wire [3:0]  opcode;
     wire [11:0] operand;
     wire [11:0] constant;
     wire [2:0]  ram_addres;
     wire [15:0] immediate;
 
-    // ---- control signals ----
     wire        acc_load;
     wire        load_upper;
     wire        lower_acc;
@@ -54,7 +44,6 @@ module top(
     wire [2:0]  alu_operation;
     wire [2:0]  acc_source;
 
-    // ---- datapath wires ----
     wire [15:0] alu_in_1, alu_in_2, alu_out;
     wire        alu_zero, alu_carry, alu_negative;
     wire [15:0] acc_out, acc_in;
@@ -95,7 +84,7 @@ module top(
         .jump_adres(jump_address)
     );
 
-    // 12-bit immediate/constant field zero-extended to the 16-bit ALU/accumulator width
+
     assign immediate = {4'b0000, constant};
 
     control_unit control_unit_inst(
@@ -278,29 +267,7 @@ module program_rom(
     input wire [5:0] address,
     output reg [15:0] instruction
 );
-    // ASIC-synthesizable ROM: fixed content as combinational logic.
-    // (An `initial`-loaded reg array has no power-on state on real
-    // silicon -- there is no such thing as a pre-loaded flip-flop value
-    // without an explicit reset network, so that pattern only works in
-    // simulation. A case statement compiles down to real gates that
-    // always produce the same values, so this is the correct way to
-    // put fixed instructions into an ASIC ROM.)
-    //
-    // Demo program (also exercised by tb_cpu.v):
-    //   0: LDI 5        acc = 5
-    //   1: ADD 3        acc = 8
-    //   2: STORE ram[0] ram[0] = 8
-    //   3: LDI 2        acc = 2
-    //   4: LOAD ram[0]  acc = 8
-    //   5: SUB 8        acc = 0, zero flag set
-    //   6: JZ 9         taken -> jump to 9
-    //   7: NOP           (branch delay slot -- always executes once)
-    //   8: LDI 0x63      (never reached; proves the jump worked)
-    //   9: LDUP 0x12    acc = {0x12, acc[7:0]}
-    //  10: IN           acc = main_input
-    //  11: OUT          main_output = acc
-    //  12: HALT
-    //  13: LDI 1         (trap; must never execute if halt holds)
+
     always @(*) begin
         case (address)
             6'd0:  instruction = 16'h1005;
@@ -404,13 +371,12 @@ module control_unit(
     end
 
     4'h1: begin
-        // LDI - load immediate into accumulator
+
         acc_load   = 1'b1;
         acc_source = 3'b000;
     end
 
-    4'h2: begin
-        // Load upper byte of accumulator from immediate, keep lower byte
+   
         acc_load   = 1'b1;
         acc_source = 3'b100;
         load_upper = 1'b1;
