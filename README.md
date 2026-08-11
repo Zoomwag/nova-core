@@ -2,7 +2,15 @@
 
 **Nova Core** is a custom 16-bit CPU designed and built from scratch in Verilog.
 
+**Demo** https://zoomwag.github.io/nova-core/
+
 The project is focused on learning how processors work by designing each major component individually and combining them into a complete CPU.
+<img width="1609" height="1116" alt="image" src="https://github.com/user-attachments/assets/029c984d-e0ca-4d1a-8968-419b53add106" />
+
+<img width="2443" height="1684" alt="image" src="https://github.com/user-attachments/assets/7bdb6bb1-2278-4eaf-ac99-e2bd8571ba45" />
+
+Here are some images of the cpu
+
 
 ## Features
 
